@@ -30,6 +30,44 @@ DECLARE_GLOBAL_DATA_PTR;
 static struct ctrl_dev *cdev = (struct ctrl_dev *)CTRL_DEVICE_BASE;
 
 #ifdef CONFIG_SPL_BUILD
+#ifdef CONFIG_SDRAM_H5TQ4G63AFR
+/* PN H5TQ4G63AFR is equivalent to MT41K256M16HA125*/
+static const struct ddr_data ddr3_data = {
+	.datardsratio0 = MT41K256M16HA125E_RD_DQS,
+	.datawdsratio0 = MT41K256M16HA125E_WR_DQS,
+	.datafwsratio0 = MT41K256M16HA125E_PHY_FIFO_WE,
+	.datawrsratio0 = MT41K256M16HA125E_PHY_WR_DATA,
+};
+
+static const struct cmd_control ddr3_cmd_ctrl_data = {
+	.cmd0csratio = MT41K256M16HA125E_RATIO,
+	.cmd0iclkout = MT41K256M16HA125E_INVERT_CLKOUT,
+
+	.cmd1csratio = MT41K256M16HA125E_RATIO,
+	.cmd1iclkout = MT41K256M16HA125E_INVERT_CLKOUT,
+
+	.cmd2csratio = MT41K256M16HA125E_RATIO,
+	.cmd2iclkout = MT41K256M16HA125E_INVERT_CLKOUT,
+};
+
+static struct emif_regs ddr3_emif_reg_data = {
+	.sdram_config = MT41K256M16HA125E_EMIF_SDCFG,
+	.ref_ctrl = MT41K256M16HA125E_EMIF_SDREF,
+	.sdram_tim1 = MT41K256M16HA125E_EMIF_TIM1,
+	.sdram_tim2 = MT41K256M16HA125E_EMIF_TIM2,
+	.sdram_tim3 = MT41K256M16HA125E_EMIF_TIM3,
+	.zq_config = MT41K256M16HA125E_ZQ_CFG,
+	.emif_ddr_phy_ctlr_1 = MT41K256M16HA125E_EMIF_READ_LATENCY,
+};
+
+const struct ctrl_ioregs ioregs = {
+	.cm0ioctl		= MT41K256M16HA125E_IOCTRL_VALUE,
+	.cm1ioctl		= MT41K256M16HA125E_IOCTRL_VALUE,
+	.cm2ioctl		= MT41K256M16HA125E_IOCTRL_VALUE,
+	.dt0ioctl		= MT41K256M16HA125E_IOCTRL_VALUE,
+	.dt1ioctl		= MT41K256M16HA125E_IOCTRL_VALUE,
+};
+#elif CONFIG_SDRAM_K4B2G1646EBIH9
 static const struct ddr_data ddr3_data = {
 	.datardsratio0 = K4B2G1646EBIH9_RD_DQS,
 	.datawdsratio0 = K4B2G1646EBIH9_WR_DQS,
@@ -58,6 +96,15 @@ static struct emif_regs ddr3_emif_reg_data = {
 	.emif_ddr_phy_ctlr_1 = K4B2G1646EBIH9_EMIF_READ_LATENCY,
 };
 
+const struct ctrl_ioregs ioregs = {
+	.cm0ioctl		= K4B2G1646EBIH9_IOCTRL_VALUE,
+	.cm1ioctl		= K4B2G1646EBIH9_IOCTRL_VALUE,
+	.cm2ioctl		= K4B2G1646EBIH9_IOCTRL_VALUE,
+	.dt0ioctl		= K4B2G1646EBIH9_IOCTRL_VALUE,
+	.dt1ioctl		= K4B2G1646EBIH9_IOCTRL_VALUE,
+};
+#endif
+
 #define OSC    (V_OSCK/1000000)
 const struct dpll_params dpll_ddr = {
 		400, OSC-1, 1, -1, -1, -1, -1};
@@ -76,14 +123,6 @@ void set_mux_conf_regs(void)
 {
 	enable_board_pin_mux();
 }
-
-const struct ctrl_ioregs ioregs = {
-	.cm0ioctl		= K4B2G1646EBIH9_IOCTRL_VALUE,
-	.cm1ioctl		= K4B2G1646EBIH9_IOCTRL_VALUE,
-	.cm2ioctl		= K4B2G1646EBIH9_IOCTRL_VALUE,
-	.dt0ioctl		= K4B2G1646EBIH9_IOCTRL_VALUE,
-	.dt1ioctl		= K4B2G1646EBIH9_IOCTRL_VALUE,
-};
 
 void sdram_init(void)
 {
