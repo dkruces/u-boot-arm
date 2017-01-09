@@ -25,7 +25,7 @@
 
 #include <twl4030.h>
 
-# Voltage list 
+/* Voltage list  */
 #define VDD1_VSEL_10   	0x20
 #define VDD1_VSEL_13   	0x3C
 #define VDD1_VSEL_135	0x3C
